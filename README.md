@@ -1,3 +1,5 @@
+🚧 PROJECT IN DEVELOPMENT 🚧
+
 # Colorize
 
 Easily change neovim and kitty color themes.
