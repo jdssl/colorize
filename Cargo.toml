@@ -6,3 +6,4 @@ author = "Jonatan Lima <jotanlima@gmail>"
 
 [dependencies]
 eframe = "0.18.0"
+commands = { path = "./commands" }
