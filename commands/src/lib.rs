@@ -4,7 +4,7 @@ pub struct Commands {}
 
 impl Commands {
     pub fn execute() {
-        let list_dir = Command::new("kitty")
+        let kitty_theme_change = Command::new("kitty")
             .arg("+kitten")
             .arg("themes")
             .arg("--reload-in=all")
@@ -12,9 +12,9 @@ impl Commands {
             .output()
             .expect("failed to execute process");
 
-        let list_dir_output = String::from_utf8_lossy(&list_dir.stdout);
+        let kitty_theme_change_output = String::from_utf8_lossy(&kitty_theme_change.stdout);
 
-        println!("list_dir status: {}", &list_dir.status);
-        println!("list_dir outupt: {}", list_dir_output);
+        println!("list_dir status: {}", &kitty_theme_change.status);
+        println!("list_dir outupt: {}", kitty_theme_change_output);
     }
 }
