@@ -1,20 +1,31 @@
-use std::process::Command;
+pub mod kitty {
 
-pub struct Commands {}
+    use std::process::Command;
 
-impl Commands {
-    pub fn execute() {
-        let kitty_theme_change = Command::new("kitty")
+    fn kitty_theme_change() {
+        let command = Command::new("kitty")
             .arg("+kitten")
             .arg("themes")
             .arg("--reload-in=all")
-            .arg("Ayu")
+            .arg("Gruvbox Dark")
             .output()
-            .expect("failed to execute process");
+            .expect("failed to execute command");
 
-        let kitty_theme_change_output = String::from_utf8_lossy(&kitty_theme_change.stdout);
+        // let command_output = String::from_utf8_lossy(&command.stdout);
+        let command_err = String::from_utf8_lossy(&command.stderr);
 
-        println!("list_dir status: {}", &kitty_theme_change.status);
-        println!("list_dir outupt: {}", kitty_theme_change_output);
+        if !command_err.is_empty() {
+            panic!("Error: {}", command_err);
+        } else {
+            println!("Kitty theme changed successfully");
+        }
+
+        // println!("kitty status: {}", &command.status);
+        // println!("kitty outupt: {}", command_output);
+        // println!("kitty err: {}", command_err);
+    }
+
+    pub fn execute() {
+        kitty_theme_change();
     }
 }

@@ -1,5 +1,3 @@
-use commands::Commands;
-
 fn main() {
-    Commands::execute();
+    commands::kitty::execute();
 }
