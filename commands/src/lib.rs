@@ -1,5 +1,7 @@
 pub mod kitty {
 
+    use dotenv::dotenv;
+    use std::env;
     use std::process::Command;
 
     fn convert_to_string(command: &std::vec::Vec<u8>) -> String {
@@ -25,10 +27,10 @@ pub mod kitty {
     }
 
     fn kitty_theme_folder() {
-        // TODO: Move THEME_FOLDER to env
-        const THEME_FOLDER: &'static str = "../../.config/kitty/themes/";
+        dotenv().ok();
+        let theme_folder = env::var("THEME_FOLDER_URL").expect("must be set");
         let command = Command::new("ls")
-            .arg(THEME_FOLDER)
+            .arg(theme_folder)
             .output()
             .expect("failed to find kitty theme folder");
 
