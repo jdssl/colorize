@@ -43,6 +43,9 @@ pub mod kitty {
             let theme_split = command_output.split(".conf\n");
             let vec: Vec<&str> = theme_split.collect();
             println!("{:?}", vec);
+
+            // To each theme name uppercase first letter and empty string
+            todo!();
         }
     }
 
