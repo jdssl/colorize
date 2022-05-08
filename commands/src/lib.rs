@@ -31,14 +31,12 @@ pub mod kitty {
         s[0..1].to_uppercase() + &s[1..]
     }
 
-    fn first<T>(v: &Vec<T>) -> Option<&T> {
-        v.first()
-    }
-
     fn capitalize_letters(s: &str) -> String {
         let letter_split_first = s.split("_");
         let letter_split_last = s.split("_").last().unwrap();
         let letter = capitalize(letter_split_last);
+
+        // println!("{:?}", letter_split_first);
 
         return format!("{}", letter);
     }
