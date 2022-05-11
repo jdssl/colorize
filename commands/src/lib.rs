@@ -5,10 +5,12 @@ pub mod kitty {
     use std::process::Command;
     use std::vec::Vec;
 
+    /// Convert output command to string
     fn convert_to_string(command: &std::vec::Vec<u8>) -> String {
         return String::from_utf8_lossy(command).to_string();
     }
 
+    /// Change Kitty theme
     fn kitty_theme_change(theme: &'static str) {
         let command = Command::new("kitty")
             .arg("+kitten")
@@ -27,21 +29,26 @@ pub mod kitty {
         }
     }
 
+    /// Return a string with the first letter uppercase
     fn capitalize(s: &str) -> String {
         s[0..1].to_uppercase() + &s[1..]
     }
 
-    fn capitalize_letters(s: &str) -> String {
-        let letter_split_first = s.split("_");
-        let letter_split_last = s.split("_").last().unwrap();
-        let letter = capitalize(letter_split_last);
+    /// Return a theme name sanitized
+    fn sanitize_theme_name(s: &str) -> String {
+        let theme_split = s.split("_");
 
-        // println!("{:?}", letter_split_first);
+        let mut theme_capitalized = vec![];
 
-        return format!("{}", letter);
+        for theme in theme_split {
+            theme_capitalized.push(capitalize(theme));
+        }
+
+        return theme_capitalized.join(" ");
     }
 
-    fn kitty_theme_folder() {
+    /// Return a themes list
+    fn kitty_theme_folder() -> Vec<String> {
         dotenv().ok();
         let theme_folder = env::var("THEME_FOLDER_URL").expect("must be set");
         let command = Command::new("ls")
@@ -62,15 +69,12 @@ pub mod kitty {
 
             let mut vec_theme_sanitized = vec![];
             for theme_name in vec_split {
-                // let mut theme_name_sanitized = capitalize_letters(theme_name);
-                let mut theme_name_sanitized = capitalize(theme_name);
+                let mut theme_name_sanitized = sanitize_theme_name(theme_name);
                 theme_name_sanitized = theme_name_sanitized.replace("_", " ");
                 vec_theme_sanitized.push(theme_name_sanitized);
             }
-            println!("{:?}", vec_theme_sanitized);
 
-            // To each theme name uppercase first letter and empty string
-            // todo!();
+            return vec_theme_sanitized;
         }
     }
 
@@ -78,6 +82,7 @@ pub mod kitty {
         // let theme = "Gruvbox Dark";
         // let theme = "Dracula";
         // kitty_theme_change(theme);
-        kitty_theme_folder();
+        let themes: Vec<String> = kitty_theme_folder();
+        println!("{:?}", themes);
     }
 }
