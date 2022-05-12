@@ -1,3 +1,3 @@
 fn main() {
-    commands::kitty::execute();
+    kitty::commands::execute();
 }

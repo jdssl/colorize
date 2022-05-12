@@ -1,4 +1,4 @@
-pub mod kitty {
+pub mod commands {
 
     use dotenv::dotenv;
     use std::env;
@@ -58,8 +58,9 @@ pub mod kitty {
 
         let command_err = convert_to_string(&command.stderr);
         let command_output = convert_to_string(&command.stdout);
+        let command_failed = !command_err.is_empty();
 
-        if !command_err.is_empty() {
+        if command_failed {
             panic!("{}", command_err);
         } else {
             let theme_split = command_output.split(".conf\n");
