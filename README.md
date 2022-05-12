@@ -4,6 +4,7 @@
 
 Easily change neovim and kitty color themes.
 
-## Kitty command line
+## Development process
 
-- kitty +kitten themes --reload-in=all "Theme name"
+All development processes are being recorded on my [dev.to](https://dev.to/jonatanlima/minha-experiencia-em-desenvolvimento-com-rust-9kl)
+
