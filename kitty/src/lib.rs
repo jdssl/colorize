@@ -10,25 +10,6 @@ pub mod commands {
         return String::from_utf8_lossy(command).to_string();
     }
 
-    /// Change Kitty theme
-    fn kitty_theme_change(theme: &'static str) {
-        let command = Command::new("kitty")
-            .arg("+kitten")
-            .arg("themes")
-            .arg("--reload-in=all")
-            .arg(theme)
-            .output()
-            .expect("failed to change kitty theme");
-
-        let command_err = convert_to_string(&command.stderr);
-
-        if !command_err.is_empty() {
-            panic!("{}", command_err);
-        } else {
-            println!("kitty theme changed successfully");
-        }
-    }
-
     /// Return a string with the first letter uppercase
     fn capitalize(s: &str) -> String {
         s[0..1].to_uppercase() + &s[1..]
@@ -47,8 +28,27 @@ pub mod commands {
         return theme_capitalized.join(" ");
     }
 
+    /// Change Kitty theme
+    pub fn kitty_theme_change(theme: &'static str) {
+        let command = Command::new("kitty")
+            .arg("+kitten")
+            .arg("themes")
+            .arg("--reload-in=all")
+            .arg(theme)
+            .output()
+            .expect("failed to change kitty theme");
+
+        let command_err = convert_to_string(&command.stderr);
+
+        if !command_err.is_empty() {
+            panic!("{}", command_err);
+        } else {
+            println!("kitty theme changed successfully");
+        }
+    }
+
     /// Return a themes list
-    fn kitty_theme_folder() -> Vec<String> {
+    pub fn kitty_theme_folder() -> Vec<String> {
         dotenv().ok();
         let theme_folder = env::var("THEME_FOLDER_URL").expect("must be set");
         let command = Command::new("ls")
@@ -77,13 +77,5 @@ pub mod commands {
 
             return vec_theme_sanitized;
         }
-    }
-
-    pub fn execute() {
-        // let theme = "Gruvbox Dark";
-        // let theme = "Dracula";
-        // kitty_theme_change(theme);
-        let themes: Vec<String> = kitty_theme_folder();
-        println!("{:?}", themes);
     }
 }

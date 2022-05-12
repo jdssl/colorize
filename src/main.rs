@@ -1,3 +1,4 @@
 fn main() {
-    kitty::commands::execute();
+    let themes = kitty::commands::kitty_theme_folder();
+    println!("{:?}", themes);
 }
