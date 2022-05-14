@@ -1,12 +1,9 @@
 [package]
-name = "kitty"
+name = "colorize"
 version = "0.1.0"
 edition = "2021"
 author = "Jonatan Lima <jotanlima@gmail>"
 
 [dependencies]
-dotenv = "0.15.0"
-
-[[test]]
-name = "integration"
-path = "tests/lib.rs"
+eframe = "0.18.0"
+kitty = { path = "../kitty" }

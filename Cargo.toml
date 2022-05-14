@@ -1,9 +1,6 @@
-[package]
-name = "colorize"
-version = "0.1.0"
-edition = "2021"
-author = "Jonatan Lima <jotanlima@gmail>"
+[workspace]
 
-[dependencies]
-eframe = "0.18.0"
-kitty = { path = "./kitty" }
+members = [
+    "colorize",
+    "kitty"
+]
