@@ -7,3 +7,7 @@ edition = "2021"
 
 [dependencies]
 dotenv = "0.15.0"
+
+[[test]]
+name = "integration"
+path = "tests/lib.rs"
