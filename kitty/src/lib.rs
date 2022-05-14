@@ -87,5 +87,10 @@ pub mod commands {
         fn it_capitalize_first_letter() {
             assert_eq!("Ayu", capitalize("ayu"));
         }
+
+        #[test]
+        fn it_capitalize_first_letter_with_the_compost_name() {
+            assert_eq!("Gruvbox_dark", capitalize("gruvbox_dark"));
+        }
     }
 }
