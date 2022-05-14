@@ -84,7 +84,7 @@ pub mod commands {
         use super::*;
 
         #[test]
-        fn is_capitalize_first_word() {
+        fn it_capitalize_first_letter() {
             assert_eq!("Ayu", capitalize("ayu"));
         }
     }
