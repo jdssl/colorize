@@ -5,5 +5,5 @@ edition = "2021"
 author = "Jonatan Lima <jotanlima@gmail>"
 
 [dependencies]
-eframe = "0.18.0"
+eframe = "0.14.0"
 kitty = { path = "../kitty" }
