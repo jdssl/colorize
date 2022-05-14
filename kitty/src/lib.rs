@@ -40,6 +40,7 @@ pub mod commands {
 
         let command_err = convert_command_result_to_string(&command.stderr);
 
+        // TODO: send error or success to UI console
         if !command_err.is_empty() {
             panic!("{}", command_err);
         } else {
@@ -60,6 +61,7 @@ pub mod commands {
         let command_output = convert_command_result_to_string(&command.stdout);
         let command_failed = !command_err.is_empty();
 
+        // TODO: send error or success to UI console
         if command_failed {
             panic!("{}", command_err);
         } else {
