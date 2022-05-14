@@ -23,13 +23,11 @@ impl App for Colorize {
     fn update(&mut self, ctx: &eframe::egui::CtxRef, _frame: &mut eframe::epi::Frame<'_>) {
         CentralPanel::default().show(ctx, |ui| {
             let mut selected = 0;
-            let mut index = 0;
-            ComboBox::from_label("").width(150.0).show_ui(ui, |ui| {
-                for theme in &self.kitty_themes {
-                    index = index + 1;
-                    ui.selectable_value(&mut selected, index, theme);
-                }
-            });
+            ComboBox::from_label("Select theme")
+                .width(150.0)
+                .show_index(ui, &mut selected, self.kitty_themes.len(), |i| {
+                    self.kitty_themes[i].to_owned()
+                });
         });
     }
 
