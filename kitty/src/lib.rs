@@ -28,6 +28,7 @@ pub mod commands {
         return theme_capitalized.join(" ");
     }
 
+    /// Execute a command to kitty theme change
     fn command_kitty_theme_change(theme_name: &'static str) -> std::process::Output {
         return Command::new("kitty")
             .arg("+kitten")
@@ -36,6 +37,14 @@ pub mod commands {
             .arg(theme_name)
             .output()
             .expect("failed to change kitty theme");
+    }
+
+    /// Execute a command to return a theme list from folder
+    fn command_list_theme_folder(theme_folder: String) -> std::process::Output {
+        return Command::new("ls")
+            .arg(theme_folder)
+            .output()
+            .expect("failed to find kitty theme folder");
     }
 
     /// Change Kitty theme
@@ -56,11 +65,7 @@ pub mod commands {
     pub fn kitty_theme_folder() -> Vec<String> {
         dotenv().ok();
         let theme_folder = env::var("THEME_FOLDER_URL").expect("must be set");
-        let command = Command::new("ls")
-            .arg(theme_folder)
-            .output()
-            .expect("failed to find kitty theme folder");
-
+        let command = command_list_theme_folder(theme_folder);
         let command_err = convert_command_result_to_string(&command.stderr);
         let command_output = convert_command_result_to_string(&command.stdout);
         let command_failed = !command_err.is_empty();
