@@ -28,23 +28,27 @@ pub mod commands {
         return theme_capitalized.join(" ");
     }
 
-    /// Change Kitty theme
-    pub fn kitty_theme_change(theme: &'static str) {
-        let command = Command::new("kitty")
+    fn command_kitty_theme_change(theme_name: &'static str) -> std::process::Output {
+        return Command::new("kitty")
             .arg("+kitten")
             .arg("themes")
             .arg("--reload-in=all")
-            .arg(theme)
+            .arg(theme_name)
             .output()
             .expect("failed to change kitty theme");
+    }
 
+    /// Change Kitty theme
+    pub fn kitty_theme_change(theme_name: &'static str) -> (bool, &str) {
+        let error_msg = "ops, something went wrong";
+        let success_msg = "kitty theme changed successfully";
+        let command = command_kitty_theme_change(theme_name);
         let command_err = convert_command_result_to_string(&command.stderr);
 
-        // TODO: send error or success to UI console
         if !command_err.is_empty() {
-            panic!("{}", command_err);
+            return (false, error_msg);
         } else {
-            println!("kitty theme changed successfully");
+            return (true, success_msg);
         }
     }
 
@@ -119,6 +123,14 @@ pub mod commands {
         fn it_sanitize_theme_name_with_the_compost_name() {
             let theme_name = "gruvbox_dark";
             assert_eq!("Gruvbox Dark", sanitize_theme_name(theme_name));
+        }
+
+        #[test]
+        fn it_kitty_theme_change() {
+            let theme_name = "Gruvbox Dark";
+            let success_msg = "kitty theme changed successfully";
+            let expected = (true, success_msg);
+            assert_eq!(expected, kitty_theme_change(theme_name));
         }
     }
 }
