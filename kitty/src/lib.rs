@@ -78,4 +78,14 @@ pub mod commands {
             return vec_theme_sanitized;
         }
     }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn is_capitalize_first_word() {
+            assert_eq!("Ayu", capitalize("ayu"));
+        }
+    }
 }
