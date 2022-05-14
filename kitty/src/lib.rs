@@ -90,6 +90,14 @@ pub mod commands {
         }
 
         #[test]
+        fn it_convert_command_output_to_string() {
+            let mut buffer = Vec::new();
+            let word = "hello";
+            append_string(&mut buffer, word);
+            assert_eq!("hello", convert_command_result_to_string(&buffer));
+        }
+
+        #[test]
         fn it_capitalize_first_letter() {
             assert_eq!("Ayu", capitalize("ayu"));
         }
@@ -100,11 +108,15 @@ pub mod commands {
         }
 
         #[test]
-        fn it_convert_command_output_to_string() {
-            let mut buffer = Vec::new();
-            let word = "hello";
-            append_string(&mut buffer, word);
-            assert_eq!("hello", convert_command_result_to_string(&buffer));
+        fn it_sanitize_theme_name() {
+            let theme_name = "ayu";
+            assert_eq!("Ayu", sanitize_theme_name(theme_name));
+        }
+
+        #[test]
+        fn it_sanitize_theme_name_with_the_compost_name() {
+            let theme_name = "gruvbox_dark";
+            assert_eq!("Gruvbox Dark", sanitize_theme_name(theme_name));
         }
     }
 }
