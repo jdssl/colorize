@@ -6,7 +6,7 @@ pub mod commands {
     use std::vec::Vec;
 
     /// Convert output command to string
-    fn convert_to_string(command: &std::vec::Vec<u8>) -> String {
+    fn convert_command_result_to_string(command: &std::vec::Vec<u8>) -> String {
         return String::from_utf8_lossy(command).to_string();
     }
 
@@ -38,7 +38,7 @@ pub mod commands {
             .output()
             .expect("failed to change kitty theme");
 
-        let command_err = convert_to_string(&command.stderr);
+        let command_err = convert_command_result_to_string(&command.stderr);
 
         if !command_err.is_empty() {
             panic!("{}", command_err);
@@ -56,8 +56,8 @@ pub mod commands {
             .output()
             .expect("failed to find kitty theme folder");
 
-        let command_err = convert_to_string(&command.stderr);
-        let command_output = convert_to_string(&command.stdout);
+        let command_err = convert_command_result_to_string(&command.stderr);
+        let command_output = convert_command_result_to_string(&command.stdout);
         let command_failed = !command_err.is_empty();
 
         if command_failed {
@@ -83,6 +83,12 @@ pub mod commands {
     mod tests {
         use super::*;
 
+        fn append_string(buffer: &mut Vec<u8>, data: &str) {
+            for value in data.bytes() {
+                buffer.push(value);
+            }
+        }
+
         #[test]
         fn it_capitalize_first_letter() {
             assert_eq!("Ayu", capitalize("ayu"));
@@ -91,6 +97,14 @@ pub mod commands {
         #[test]
         fn it_capitalize_first_letter_with_the_compost_name() {
             assert_eq!("Gruvbox_dark", capitalize("gruvbox_dark"));
+        }
+
+        #[test]
+        fn it_convert_command_output_to_string() {
+            let mut buffer = Vec::new();
+            let word = "hello";
+            append_string(&mut buffer, word);
+            assert_eq!("hello", convert_command_result_to_string(&buffer));
         }
     }
 }
