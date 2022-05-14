@@ -48,16 +48,15 @@ pub mod commands {
     }
 
     /// Change Kitty theme
-    pub fn kitty_theme_change(theme_name: &'static str) -> (bool, &str) {
-        let error_msg = "ops, something went wrong";
-        let success_msg = "kitty theme changed successfully";
+    pub fn kitty_theme_change(theme_name: &'static str) -> bool {
         let command = command_kitty_theme_change(theme_name);
         let command_err = convert_command_result_to_string(&command.stderr);
+        let command_failed = !command_err.is_empty();
 
-        if !command_err.is_empty() {
-            return (false, error_msg);
+        if command_failed {
+            panic!("{}", command_err);
         } else {
-            return (true, success_msg);
+            return true;
         }
     }
 
@@ -70,7 +69,6 @@ pub mod commands {
         let command_output = convert_command_result_to_string(&command.stdout);
         let command_failed = !command_err.is_empty();
 
-        // TODO: send error or success to UI console
         if command_failed {
             panic!("{}", command_err);
         } else {
@@ -130,12 +128,6 @@ pub mod commands {
             assert_eq!("Gruvbox Dark", sanitize_theme_name(theme_name));
         }
 
-        #[test]
-        fn it_kitty_theme_change() {
-            let theme_name = "Gruvbox Dark";
-            let success_msg = "kitty theme changed successfully";
-            let expected = (true, success_msg);
-            assert_eq!(expected, kitty_theme_change(theme_name));
-        }
+        // TODO: How mock/stub/spy Command::new result?
     }
 }
