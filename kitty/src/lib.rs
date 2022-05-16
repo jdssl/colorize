@@ -48,20 +48,20 @@ pub mod commands {
     }
 
     /// Change Kitty theme
-    pub fn kitty_theme_change(theme_name: &'static str) -> bool {
+    pub fn kitty_theme_change(theme_name: &'static str) -> Result<bool, String> {
         let command = command_kitty_theme_change(theme_name);
         let command_err = convert_command_result_to_string(&command.stderr);
         let command_failed = !command_err.is_empty();
 
         if command_failed {
-            panic!("{}", command_err);
+            Err(format!("{}", command_err))
         } else {
-            return true;
+            Ok(true)
         }
     }
 
     /// Return a themes list
-    pub fn kitty_theme_folder() -> Vec<String> {
+    pub fn kitty_theme_folder() -> Result<Vec<String>, String> {
         dotenv().ok();
         let theme_folder = env::var("THEME_FOLDER_URL").expect("must be set");
         let command = command_list_theme_folder(theme_folder);
@@ -70,7 +70,7 @@ pub mod commands {
         let command_failed = !command_err.is_empty();
 
         if command_failed {
-            panic!("{}", command_err);
+            Err(format!("{}", command_err))
         } else {
             let theme_split = command_output.split(".conf\n");
             let mut vec_split: Vec<&str> = theme_split.collect();
@@ -84,7 +84,7 @@ pub mod commands {
                 vec_theme_sanitized.push(theme_name_sanitized);
             }
 
-            return vec_theme_sanitized;
+            Ok(vec_theme_sanitized)
         }
     }
 

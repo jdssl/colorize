@@ -14,7 +14,7 @@ impl Colorize {
     fn new() -> Colorize {
         let theme_list = kitty::commands::kitty_theme_folder();
         Colorize {
-            kitty_themes: theme_list,
+            kitty_themes: theme_list.unwrap(),
         }
     }
 }
