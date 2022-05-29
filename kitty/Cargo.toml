@@ -6,6 +6,7 @@ author = "Jonatan Lima <jotanlima@gmail>"
 
 [dependencies]
 dotenv = "0.15.0"
+mockall = "0.10.2"
 
 [[test]]
 name = "integration"
