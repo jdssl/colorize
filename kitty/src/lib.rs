@@ -139,7 +139,7 @@ mod tests {
     }
 
     #[test]
-    fn it_throw_error_when_command_failed() {
+    fn it_throw_error_when_theme_change_failed() {
         let theme_name = String::from("Ayu");
         let mut mock_kitty_theme_change = Box::new(MockCommands::new());
 
@@ -171,6 +171,40 @@ mod tests {
         assert_eq!(
             expected_message,
             Ok(String::from("Theme changed successfully"))
+        );
+    }
+
+    #[test]
+    fn it_throw_error_when_kitty_theme_folder_failed() {
+        let mut mock_list_themes_from_folder = Box::new(MockCommands::new());
+
+        mock_list_themes_from_folder
+            .expect_list_themes_from_folder()
+            .once()
+            .returning(|_x| Err(String::from("failed to list themes from folder")));
+
+        let expected_message = kitty_theme_folder(mock_list_themes_from_folder);
+
+        assert_eq!(
+            expected_message,
+            Err(String::from("failed to list themes from folder"))
+        );
+    }
+
+    #[test]
+    fn it_kitty_theme_folder() {
+        let mut mock_list_themes_from_folder = Box::new(MockCommands::new());
+
+        mock_list_themes_from_folder
+            .expect_list_themes_from_folder()
+            .once()
+            .returning(|_x| Ok(vec![String::from("Theme One"), String::from("Theme Two")]));
+
+        let expected_message = kitty_theme_folder(mock_list_themes_from_folder);
+
+        assert_eq!(
+            expected_message,
+            Ok(vec![String::from("Theme One"), String::from("Theme Two")])
         );
     }
 }
