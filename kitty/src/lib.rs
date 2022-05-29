@@ -1,70 +1,44 @@
-pub mod commands {
+use dotenv::dotenv;
+use mockall::{automock, predicate::*};
+use std::env;
+use std::process::Command;
+use std::vec::Vec;
 
-    use dotenv::dotenv;
-    use std::env;
-    use std::process::Command;
-    use std::vec::Vec;
+struct Kitty;
 
-    /// Convert output command to string
-    fn convert_command_result_to_string(command: &std::vec::Vec<u8>) -> String {
-        return String::from_utf8_lossy(command).to_string();
-    }
-
-    /// Return a string with the first letter uppercase
-    fn capitalize(s: &str) -> String {
-        s[0..1].to_uppercase() + &s[1..]
-    }
-
-    /// Return a theme name sanitized
-    fn sanitize_theme_name(s: &str) -> String {
-        let theme_split = s.split("_");
-
-        let mut theme_capitalized = vec![];
-
-        for theme in theme_split {
-            theme_capitalized.push(capitalize(theme));
-        }
-
-        return theme_capitalized.join(" ");
-    }
-
+#[cfg_attr(test, automock)]
+pub trait Commands {
     /// Execute a command to kitty theme change
-    fn command_kitty_theme_change(theme_name: &'static str) -> std::process::Output {
-        return Command::new("kitty")
+    fn theme_change(&self, theme_name: String) -> Result<String, String>;
+
+    /// Execute a command to return a theme list from folder
+    fn list_themes_from_folder(&self, folder_name: String) -> Result<Vec<String>, String>;
+}
+
+impl Commands for Kitty {
+    fn theme_change(&self, theme_name: String) -> Result<String, String> {
+        let message_success = String::from("Theme changed successfully");
+        let status = Command::new("kitty")
             .arg("+kitten")
             .arg("themes")
             .arg("--reload-in=all")
             .arg(theme_name)
-            .output()
+            .status()
             .expect("failed to change kitty theme");
-    }
 
-    /// Execute a command to return a theme list from folder
-    fn command_list_theme_folder(theme_folder: String) -> std::process::Output {
-        return Command::new("ls")
-            .arg(theme_folder)
-            .output()
-            .expect("failed to find kitty theme folder");
-    }
-
-    /// Change Kitty theme
-    pub fn kitty_theme_change(theme_name: &'static str) -> Result<bool, String> {
-        let command = command_kitty_theme_change(theme_name);
-        let command_err = convert_command_result_to_string(&command.stderr);
-        let command_failed = !command_err.is_empty();
-
-        if command_failed {
-            Err(format!("{}", command_err))
+        if status.success() {
+            Ok(message_success)
         } else {
-            Ok(true)
+            Err(format!("failed change theme: {}", status))
         }
     }
 
-    /// Return a themes list
-    pub fn kitty_theme_folder() -> Result<Vec<String>, String> {
-        dotenv().ok();
-        let theme_folder = env::var("THEME_FOLDER_URL").expect("must be set");
-        let command = command_list_theme_folder(theme_folder);
+    fn list_themes_from_folder(&self, folder_name: String) -> Result<Vec<String>, String> {
+        let command = Command::new("ls")
+            .arg(folder_name)
+            .output()
+            .expect("failed to find kitty theme folder");
+
         let command_err = convert_command_result_to_string(&command.stderr);
         let command_output = convert_command_result_to_string(&command.stdout);
         let command_failed = !command_err.is_empty();
@@ -87,47 +61,116 @@ pub mod commands {
             Ok(vec_theme_sanitized)
         }
     }
+}
 
-    #[cfg(test)]
-    mod tests {
-        use super::*;
+/// Convert output command to string
+fn convert_command_result_to_string(command: &std::vec::Vec<u8>) -> String {
+    return String::from_utf8_lossy(command).to_string();
+}
 
-        fn append_string(buffer: &mut Vec<u8>, data: &str) {
-            for value in data.bytes() {
-                buffer.push(value);
-            }
+/// Return a string with the first letter uppercase
+fn capitalize(s: &str) -> String {
+    s[0..1].to_uppercase() + &s[1..]
+}
+
+/// Return a theme name sanitized
+fn sanitize_theme_name(s: &str) -> String {
+    let theme_split = s.split("_");
+
+    let mut theme_capitalized = vec![];
+
+    for theme in theme_split {
+        theme_capitalized.push(capitalize(theme));
+    }
+
+    return theme_capitalized.join(" ");
+}
+
+/// Change Kitty theme
+pub fn kitty_theme_change(cmd: Box<dyn Commands>, theme_name: String) -> Result<String, String> {
+    cmd.theme_change(theme_name)
+}
+
+/// Return a themes list
+pub fn kitty_theme_folder(cmd: Box<dyn Commands>) -> Result<Vec<String>, String> {
+    dotenv().ok();
+    let theme_folder = env::var("THEME_FOLDER_URL").expect("must be set");
+    cmd.list_themes_from_folder(theme_folder)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn append_string(buffer: &mut Vec<u8>, data: &str) {
+        for value in data.bytes() {
+            buffer.push(value);
         }
+    }
 
-        #[test]
-        fn it_convert_command_output_to_string() {
-            let mut buffer = Vec::new();
-            let word = "hello";
-            append_string(&mut buffer, word);
-            assert_eq!("hello", convert_command_result_to_string(&buffer));
-        }
+    #[test]
+    fn it_convert_command_output_to_string() {
+        let mut buffer = Vec::new();
+        let word = "hello";
+        append_string(&mut buffer, word);
+        assert_eq!("hello", convert_command_result_to_string(&buffer));
+    }
 
-        #[test]
-        fn it_capitalize_first_letter() {
-            assert_eq!("Ayu", capitalize("ayu"));
-        }
+    #[test]
+    fn it_capitalize_first_letter() {
+        assert_eq!("Ayu", capitalize("ayu"));
+    }
 
-        #[test]
-        fn it_capitalize_first_letter_with_the_compost_name() {
-            assert_eq!("Gruvbox_dark", capitalize("gruvbox_dark"));
-        }
+    #[test]
+    fn it_capitalize_first_letter_with_the_compost_name() {
+        assert_eq!("Gruvbox_dark", capitalize("gruvbox_dark"));
+    }
 
-        #[test]
-        fn it_sanitize_theme_name() {
-            let theme_name = "ayu";
-            assert_eq!("Ayu", sanitize_theme_name(theme_name));
-        }
+    #[test]
+    fn it_sanitize_theme_name() {
+        let theme_name = "ayu";
+        assert_eq!("Ayu", sanitize_theme_name(theme_name));
+    }
 
-        #[test]
-        fn it_sanitize_theme_name_with_the_compost_name() {
-            let theme_name = "gruvbox_dark";
-            assert_eq!("Gruvbox Dark", sanitize_theme_name(theme_name));
-        }
+    #[test]
+    fn it_sanitize_theme_name_with_the_compost_name() {
+        let theme_name = "gruvbox_dark";
+        assert_eq!("Gruvbox Dark", sanitize_theme_name(theme_name));
+    }
 
-        // TODO: How mock/stub/spy Command::new result?
+    #[test]
+    fn it_throw_error_when_command_failed() {
+        let theme_name = String::from("Ayu");
+        let mut mock_kitty_theme_change = Box::new(MockCommands::new());
+
+        mock_kitty_theme_change
+            .expect_theme_change()
+            .once()
+            .returning(|_x| Err(String::from("failed to change kitty theme")));
+
+        let expected_message = kitty_theme_change(mock_kitty_theme_change, theme_name);
+
+        assert_eq!(
+            expected_message,
+            Err(String::from("failed to change kitty theme"))
+        );
+    }
+
+    #[test]
+    fn it_change_theme() {
+        let theme_name = String::from("Ayu");
+        let mut mock_kitty_theme_change = Box::new(MockCommands::new());
+
+        mock_kitty_theme_change
+            .expect_theme_change()
+            .once()
+            .returning(|_x| Ok(String::from("Theme changed successfully")));
+
+        let expected_message = kitty_theme_change(mock_kitty_theme_change, theme_name);
+
+        assert_eq!(
+            expected_message,
+            Ok(String::from("Theme changed successfully"))
+        );
     }
 }
