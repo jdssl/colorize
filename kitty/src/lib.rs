@@ -3,6 +3,7 @@ use mockall::{automock, predicate::*};
 use std::env;
 use std::process::Command;
 use std::vec::Vec;
+mod utils;
 
 pub struct Kitty;
 
@@ -39,8 +40,8 @@ impl Commands for Kitty {
             .output()
             .expect("failed to find kitty theme folder");
 
-        let command_err = convert_command_result_to_string(&command.stderr);
-        let command_output = convert_command_result_to_string(&command.stdout);
+        let command_err = utils::convert_command_result_to_string(&command.stderr);
+        let command_output = utils::convert_command_result_to_string(&command.stdout);
         let command_failed = !command_err.is_empty();
 
         if command_failed {
@@ -63,16 +64,6 @@ impl Commands for Kitty {
     }
 }
 
-/// Convert output command to string
-fn convert_command_result_to_string(command: &std::vec::Vec<u8>) -> String {
-    return String::from_utf8_lossy(command).to_string();
-}
-
-/// Return a string with the first letter uppercase
-fn capitalize(s: &str) -> String {
-    s[0..1].to_uppercase() + &s[1..]
-}
-
 /// Return a theme name sanitized
 fn sanitize_theme_name(s: &str) -> String {
     let theme_split = s.split("_");
@@ -80,7 +71,7 @@ fn sanitize_theme_name(s: &str) -> String {
     let mut theme_capitalized = vec![];
 
     for theme in theme_split {
-        theme_capitalized.push(capitalize(theme));
+        theme_capitalized.push(utils::capitalize(theme));
     }
 
     return theme_capitalized.join(" ");
@@ -101,30 +92,6 @@ pub fn kitty_theme_folder(cmd: Box<dyn Commands>) -> Result<Vec<String>, String>
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    fn append_string(buffer: &mut Vec<u8>, data: &str) {
-        for value in data.bytes() {
-            buffer.push(value);
-        }
-    }
-
-    #[test]
-    fn it_convert_command_output_to_string() {
-        let mut buffer = Vec::new();
-        let word = "hello";
-        append_string(&mut buffer, word);
-        assert_eq!("hello", convert_command_result_to_string(&buffer));
-    }
-
-    #[test]
-    fn it_capitalize_first_letter() {
-        assert_eq!("Ayu", capitalize("ayu"));
-    }
-
-    #[test]
-    fn it_capitalize_first_letter_with_the_compost_name() {
-        assert_eq!("Gruvbox_dark", capitalize("gruvbox_dark"));
-    }
 
     #[test]
     fn it_sanitize_theme_name() {
