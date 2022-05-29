@@ -4,7 +4,7 @@ use eframe::{
     run_native, NativeOptions,
 };
 
-use kitty;
+use kitty::{kitty_theme_folder, Kitty};
 
 struct Colorize {
     kitty_themes: Vec<String>,
@@ -12,7 +12,7 @@ struct Colorize {
 
 impl Colorize {
     fn new() -> Colorize {
-        let theme_list = kitty::commands::kitty_theme_folder();
+        let theme_list = kitty_theme_folder(Box::new(Kitty {}));
         Colorize {
             kitty_themes: theme_list.unwrap(),
         }
@@ -37,8 +37,12 @@ impl App for Colorize {
 }
 
 fn main() {
+    // GUI
     let app = Colorize::new();
     let win_option = NativeOptions::default();
-
     run_native(Box::new(app), win_option);
+
+    // Code
+    let theme_list = kitty_theme_folder(Box::new(Kitty {}));
+    println!("{:?}", theme_list);
 }

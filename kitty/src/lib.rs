@@ -4,7 +4,7 @@ use std::env;
 use std::process::Command;
 use std::vec::Vec;
 
-struct Kitty;
+pub struct Kitty;
 
 #[cfg_attr(test, automock)]
 pub trait Commands {
