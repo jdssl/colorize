@@ -2,7 +2,7 @@
 
 # Colorize
 
-Easily change neovim and kitty color themes.
+Easily change kitty color themes.
 
 ## Development process
 
