@@ -1,4 +1,5 @@
 use dotenv::dotenv;
+#[allow(unused_imports)]
 use mockall::{automock, predicate::*};
 use std::env;
 use std::process::Command;
