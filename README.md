@@ -5,7 +5,7 @@
 Easily change kitty color themes.
 
 <a href="https://www.youtube.com/watch?v=arpYqtNcQwc" target="_blank">
-<img title="colorize" alt="colorize" src="/images/youtube.png" width="800">
+<img title="colorize" alt="colorize" src="/images/colorize.gif" width="800">
 </a>
 
 ## Development process
