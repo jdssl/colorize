@@ -4,6 +4,10 @@
 
 Easily change kitty color themes.
 
+<a href="https://www.youtube.com/watch?v=arpYqtNcQwc" target="_blank">
+<img title="colorize" alt="colorize" src="/images/youtube.png" width="800">
+</a>
+
 ## Development process
 
 All development processes are being recorded on my [dev.to](https://dev.to/jonatanlima/minha-experiencia-em-desenvolvimento-com-rust-9kl)
