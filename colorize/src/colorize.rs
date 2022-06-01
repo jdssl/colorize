@@ -1,10 +1,10 @@
 use eframe::{
-    egui::{CentralPanel, ComboBox},
+    egui::{Button, CentralPanel, Grid, ScrollArea, Vec2},
     epi::App,
     run_native, NativeOptions,
 };
 
-use kitty::{kitty_theme_folder, Kitty};
+use kitty::{kitty_theme_change, kitty_theme_folder, Kitty};
 
 struct Colorize {
     kitty_themes: Vec<String>,
@@ -22,23 +22,38 @@ impl Colorize {
 impl App for Colorize {
     fn update(&mut self, ctx: &eframe::egui::CtxRef, _frame: &mut eframe::epi::Frame<'_>) {
         CentralPanel::default().show(ctx, |ui| {
-            let mut selected = 0;
-            ComboBox::from_label("Select theme")
-                .width(150.0)
-                .show_index(ui, &mut selected, self.kitty_themes.len(), |i| {
-                    self.kitty_themes[i].to_owned()
+            ui.add_space(10.);
+            let mut iter = 0;
+
+            ScrollArea::auto_sized().show(ui, |ui| {
+                Grid::new("some_unique_id").show(ui, |ui| {
+                    for theme in &self.kitty_themes {
+                        iter = iter + 1;
+
+                        let button = ui.add(Button::new(theme));
+
+                        if iter % 5 == 0 {
+                            ui.end_row();
+                        }
+                        if button.clicked() {
+                            let _message =
+                                kitty_theme_change(Box::new(Kitty {}), String::from(theme));
+                        }
+                    }
                 });
+            });
         });
     }
 
     fn name(&self) -> &str {
-        "Colorize"
+        "colorize - v0.1.0"
     }
 }
 
 pub fn init() {
     let app = Colorize::new();
-    let win_option = NativeOptions::default();
+    let mut win_option = NativeOptions::default();
+    win_option.initial_window_size = Some(Vec2::new(540., 70.));
 
     run_native(Box::new(app), win_option);
 }
