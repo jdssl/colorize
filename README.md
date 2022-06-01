@@ -12,6 +12,11 @@ Easily change kitty color themes.
 
 All development processes are being recorded on my [dev.to](https://dev.to/jonatanlima/minha-experiencia-em-desenvolvimento-com-rust-9kl)
 
+## To Run
+
+- Rename `.env-example` to `.env` and fill with the path of kitty themes.
+- Ex:. `THEME_FOLDER_URL="../../.config/kitty/themes/"`
+
 ## Run tests
 
 - Run all tests to kitty module: `make kitty-tests`
