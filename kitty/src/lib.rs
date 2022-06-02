@@ -142,14 +142,14 @@ mod tests {
     #[test]
     fn it_throw_error_when_theme_change_failed() {
         let theme_name = String::from("Ayu");
-        let mut mock_kitty_theme_change = Box::new(MockCommands::new());
+        let mut mock_commands = Box::new(MockCommands::new());
 
-        mock_kitty_theme_change
+        mock_commands
             .expect_theme_change()
             .once()
             .returning(|_x| Err(String::from("failed to change kitty theme")));
 
-        let expected_message = kitty_theme_change(mock_kitty_theme_change, theme_name);
+        let expected_message = kitty_theme_change(mock_commands, theme_name);
 
         assert_eq!(
             expected_message,
@@ -160,14 +160,14 @@ mod tests {
     #[test]
     fn it_change_theme() {
         let theme_name = String::from("Ayu");
-        let mut mock_kitty_theme_change = Box::new(MockCommands::new());
+        let mut mock_commands = Box::new(MockCommands::new());
 
-        mock_kitty_theme_change
+        mock_commands
             .expect_theme_change()
             .once()
             .returning(|_x| Ok(String::from("Theme changed successfully")));
 
-        let expected_message = kitty_theme_change(mock_kitty_theme_change, theme_name);
+        let expected_message = kitty_theme_change(mock_commands, theme_name);
 
         assert_eq!(
             expected_message,
@@ -177,14 +177,19 @@ mod tests {
 
     #[test]
     fn it_throw_error_when_kitty_theme_folder_failed() {
-        let mut mock_list_themes_from_folder = Box::new(MockCommands::new());
+        let mut mock_commands = Box::new(MockCommands::new());
 
-        mock_list_themes_from_folder
+        mock_commands
+            .expect_get_themes_path_from_colorize_file()
+            .once()
+            .returning(|| Ok(String::from("any_path")));
+
+        mock_commands
             .expect_list_themes_from_folder()
             .once()
             .returning(|_x| Err(String::from("failed to list themes from folder")));
 
-        let expected_message = kitty_theme_folder(mock_list_themes_from_folder);
+        let expected_message = kitty_theme_folder(mock_commands);
 
         assert_eq!(
             expected_message,
@@ -194,14 +199,20 @@ mod tests {
 
     #[test]
     fn it_kitty_theme_folder() {
-        let mut mock_list_themes_from_folder = Box::new(MockCommands::new());
+        let mut mock_commands = Box::new(MockCommands::new());
 
-        mock_list_themes_from_folder
+        mock_commands
+            .expect_get_themes_path_from_colorize_file()
+            .once()
+            .returning(|| Ok(String::from("any_path")));
+
+        mock_commands
             .expect_list_themes_from_folder()
+            .with(eq(String::from("any_path")))
             .once()
             .returning(|_x| Ok(vec![String::from("Theme One"), String::from("Theme Two")]));
 
-        let expected_message = kitty_theme_folder(mock_list_themes_from_folder);
+        let expected_message = kitty_theme_folder(mock_commands);
 
         assert_eq!(
             expected_message,
