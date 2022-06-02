@@ -1,9 +1,11 @@
-use dotenv::dotenv;
 #[allow(unused_imports)]
 use mockall::{automock, predicate::*};
-use std::env;
 use std::process::Command;
 use std::vec::Vec;
+
+extern crate directories;
+use directories::BaseDirs;
+
 mod utils;
 
 pub struct Kitty;
@@ -15,6 +17,9 @@ pub trait Commands {
 
     /// Execute a command to return a theme list from folder
     fn list_themes_from_folder(&self, folder_name: String) -> Result<Vec<String>, String>;
+
+    /// Get theme path from colorize file
+    fn get_themes_path_from_colorize_file(&self) -> Result<String, String>;
 }
 
 impl Commands for Kitty {
@@ -37,7 +42,7 @@ impl Commands for Kitty {
 
     fn list_themes_from_folder(&self, folder_name: String) -> Result<Vec<String>, String> {
         let command = Command::new("ls")
-            .arg(folder_name)
+            .arg(folder_name.trim())
             .output()
             .expect("failed to find kitty theme folder");
 
@@ -63,6 +68,31 @@ impl Commands for Kitty {
             Ok(vec_theme_sanitized)
         }
     }
+
+    fn get_themes_path_from_colorize_file(&self) -> Result<String, String> {
+        if let Some(base_dirs) = BaseDirs::new() {
+            let file = "colorize";
+            let home = base_dirs.home_dir();
+            let full_path = format!("{}/{}", home.to_string_lossy(), file);
+
+            let command = Command::new("cat")
+                .arg(full_path)
+                .output()
+                .expect("failed to find colorize file");
+
+            let command_err = utils::convert_command_result_to_string(&command.stderr);
+            let command_output = utils::convert_command_result_to_string(&command.stdout);
+            let command_failed = !command_err.is_empty();
+
+            if command_failed {
+                Err(format!("{}", command_err))
+            } else {
+                Ok(command_output)
+            }
+        } else {
+            Err(format!("{}", "Oops something went wrong"))
+        }
+    }
 }
 
 /// Return a theme name sanitized
@@ -85,9 +115,12 @@ pub fn kitty_theme_change(cmd: Box<dyn Commands>, theme_name: String) -> Result<
 
 /// Return a themes list
 pub fn kitty_theme_folder(cmd: Box<dyn Commands>) -> Result<Vec<String>, String> {
-    dotenv().ok();
-    let theme_folder = env::var("THEME_FOLDER_URL").expect("must be set");
-    cmd.list_themes_from_folder(theme_folder)
+    let theme_folder = cmd.get_themes_path_from_colorize_file();
+    cmd.list_themes_from_folder(theme_folder.unwrap())
+}
+
+pub fn colorize_file(cmd: Box<dyn Commands>) -> Result<String, String> {
+    cmd.get_themes_path_from_colorize_file()
 }
 
 #[cfg(test)]

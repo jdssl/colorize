@@ -14,8 +14,8 @@ All development processes are being recorded on my [dev.to](https://dev.to/jonat
 
 ## To Run
 
-- Rename `.env-example` to `.env` and fill with the path of kitty themes.
-- Ex:. `THEME_FOLDER_URL="../../.config/kitty/themes/"`
+- Create file `colorize` in `$HOME` directory with the path.
+- Ex:. `/Users/<your-username>/.config/kitty/themes`
 
 ## Run tests
 

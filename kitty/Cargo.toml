@@ -5,8 +5,8 @@ edition = "2021"
 author = "Jonatan Lima <jotanlima@gmail>"
 
 [dependencies]
-dotenv = "0.15.0"
 mockall = "0.10.2"
+directories = "4.0.1"
 
 [[test]]
 name = "integration"
