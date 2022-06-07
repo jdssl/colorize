@@ -46,9 +46,10 @@ impl App for Colorize {
 }
 
 pub fn init() {
+    let name = "colorize - v0.2.0";
     let app = Box::new(Colorize::new());
     let mut win_option = NativeOptions::default();
     win_option.initial_window_size = Some(Vec2::new(540., 70.));
 
-    run_native("colorize - v0.1.0", win_option, Box::new(|_cc| app));
+    run_native(name, win_option, Box::new(|_cc| app));
 }
