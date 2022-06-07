@@ -124,7 +124,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b036167e76041694579972c28cf4877b4f92da222560ddb49008937b6a6727c"
 dependencies = [
  "log",
- "nix 0.18.0",
+ "nix 0.20.0",
 ]
 
 [[package]]
@@ -974,7 +974,7 @@ checksum = "e1bcdd74c20ad5d95aacd60ef9ba40fdf77f767051040541df557b7a9b2a2121"
 
 [[package]]
 name = "nix"
-version = "0.18.0"
+version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "83450fe6a6142ddd95fb064b746083fc4ef1705fe81f64a64e1d4b39f54a1055"
 dependencies = [
@@ -1385,7 +1385,7 @@ dependencies = [
  "lazy_static",
  "log",
  "memmap2 0.1.0",
- "nix 0.18.0",
+ "nix 0.20.0",
  "wayland-client 0.28.6",
  "wayland-cursor 0.28.6",
  "wayland-protocols 0.28.6",
