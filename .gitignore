@@ -2,3 +2,4 @@
 cargo.lock
 **/*.rs.bk
 .env
+vendor/

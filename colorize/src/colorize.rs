@@ -1,7 +1,6 @@
 use eframe::{
     egui::{Button, CentralPanel, Grid, ScrollArea, Vec2},
-    epi::App,
-    run_native, NativeOptions,
+    run_native, App, NativeOptions,
 };
 
 use kitty::{kitty_theme_change, kitty_theme_folder, Kitty};
@@ -20,12 +19,12 @@ impl Colorize {
 }
 
 impl App for Colorize {
-    fn update(&mut self, ctx: &eframe::egui::CtxRef, _frame: &mut eframe::epi::Frame<'_>) {
+    fn update(&mut self, ctx: &eframe::egui::Context, _frame: &mut eframe::Frame) {
         CentralPanel::default().show(ctx, |ui| {
             ui.add_space(10.);
             let mut iter = 0;
 
-            ScrollArea::auto_sized().show(ui, |ui| {
+            ScrollArea::vertical().show(ui, |ui| {
                 Grid::new("some_unique_id").show(ui, |ui| {
                     for theme in &self.kitty_themes {
                         iter = iter + 1;
@@ -44,16 +43,13 @@ impl App for Colorize {
             });
         });
     }
-
-    fn name(&self) -> &str {
-        "colorize - v0.1.0"
-    }
 }
 
 pub fn init() {
-    let app = Colorize::new();
+    let name = "colorize - v0.2.0";
+    let app = Box::new(Colorize::new());
     let mut win_option = NativeOptions::default();
     win_option.initial_window_size = Some(Vec2::new(540., 70.));
 
-    run_native(Box::new(app), win_option);
+    run_native(name, win_option, Box::new(|_cc| app));
 }
