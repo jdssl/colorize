@@ -5,7 +5,7 @@ edition = "2021"
 author = "Jonatan Lima <jotanlima@gmail>"
 
 [dependencies]
-mockall = "0.10.2"
+mockall = "0.11.1"
 directories = "4.0.1"
 
 [[test]]
