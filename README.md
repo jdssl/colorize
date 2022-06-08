@@ -1,5 +1,3 @@
-# 🚧 PROJECT IN DEVELOPMENT 🚧
-
 # Colorize
 
 Easily change kitty color themes.
