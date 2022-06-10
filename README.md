@@ -6,10 +6,6 @@ Easily change kitty color themes.
 <img title="colorize" alt="colorize" src="/images/colorize.gif" width="800">
 </a>
 
-## Development process
-
-All development processes are being recorded on my [dev.to](https://dev.to/jonatanlima/minha-experiencia-em-desenvolvimento-com-rust-9kl)
-
 ## To Run
 
 - Create file `colorize` in `$HOME` directory with the path.
