@@ -31,7 +31,7 @@ impl App for Colorize {
 
                         let button = ui.add(Button::new(theme));
 
-                        if iter % 5 == 0 {
+                        if iter % 4 == 0 {
                             ui.end_row();
                         }
                         if button.clicked() {
@@ -49,7 +49,7 @@ pub fn init() {
     let name = "colorize - v0.2.0";
     let app = Box::new(Colorize::new());
     let mut win_option = NativeOptions::default();
-    win_option.initial_window_size = Some(Vec2::new(540., 70.));
+    win_option.initial_window_size = Some(Vec2::new(540., 80.));
 
     run_native(name, win_option, Box::new(|_cc| app));
 }
