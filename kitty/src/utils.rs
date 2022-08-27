@@ -1,5 +1,5 @@
 /// Convert output command to string
-pub fn convert_command_result_to_string(command: &std::vec::Vec<u8>) -> String {
+pub fn convert_command_result_to_string(command: &[u8]) -> String {
     return String::from_utf8_lossy(command).to_string();
 }
 

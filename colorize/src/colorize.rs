@@ -27,7 +27,7 @@ impl App for Colorize {
             ScrollArea::vertical().show(ui, |ui| {
                 Grid::new("some_unique_id").show(ui, |ui| {
                     for theme in &self.kitty_themes {
-                        iter = iter + 1;
+                        iter += 1;
 
                         let button = ui.add(Button::new(theme));
 
@@ -48,8 +48,10 @@ impl App for Colorize {
 pub fn init() {
     let name = "colorize - v0.2.0";
     let app = Box::new(Colorize::new());
-    let mut win_option = NativeOptions::default();
-    win_option.initial_window_size = Some(Vec2::new(540., 80.));
+    let win_option = NativeOptions {
+        initial_window_size: Some(Vec2::new(540., 80.)),
+        ..Default::default()
+    };
 
     run_native(name, win_option, Box::new(|_cc| app));
 }

@@ -51,7 +51,7 @@ impl Commands for Kitty {
         let command_failed = !command_err.is_empty();
 
         if command_failed {
-            Err(format!("{}", command_err))
+            Err(command_err)
         } else {
             let theme_split = command_output.split(".conf\n");
             let mut vec_split: Vec<&str> = theme_split.collect();
@@ -61,7 +61,7 @@ impl Commands for Kitty {
             let mut vec_theme_sanitized = vec![];
             for theme_name in vec_split {
                 let mut theme_name_sanitized = sanitize_theme_name(theme_name);
-                theme_name_sanitized = theme_name_sanitized.replace("_", " ");
+                theme_name_sanitized = theme_name_sanitized.replace('_', " ");
                 vec_theme_sanitized.push(theme_name_sanitized);
             }
 
@@ -85,19 +85,19 @@ impl Commands for Kitty {
             let command_failed = !command_err.is_empty();
 
             if command_failed {
-                Err(format!("{}", command_err))
+                Err(command_err)
             } else {
                 Ok(command_output)
             }
         } else {
-            Err(format!("{}", "Oops something went wrong"))
+            Err("Oops something went wrong".to_string())
         }
     }
 }
 
 /// Return a theme name sanitized
 fn sanitize_theme_name(s: &str) -> String {
-    let theme_split = s.split("_");
+    let theme_split = s.split('_');
 
     let mut theme_capitalized = vec![];
 
@@ -105,7 +105,7 @@ fn sanitize_theme_name(s: &str) -> String {
         theme_capitalized.push(utils::capitalize(theme));
     }
 
-    return theme_capitalized.join(" ");
+    theme_capitalized.join(" ")
 }
 
 /// Change Kitty theme
