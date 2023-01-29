@@ -34,10 +34,10 @@ impl Commands for Kitty {
             .expect("failed to change kitty theme");
 
         if status.success() {
-            Ok(message_success)
-        } else {
-            Err(format!("failed change theme: {}", status))
+            return Ok(message_success);
         }
+
+        Err(format!("failed change theme: {status}"))
     }
 
     fn list_themes_from_folder(&self, folder_name: String) -> Result<Vec<String>, String> {
@@ -51,22 +51,22 @@ impl Commands for Kitty {
         let command_failed = !command_err.is_empty();
 
         if command_failed {
-            Err(command_err)
-        } else {
-            let theme_split = command_output.split(".conf\n");
-            let mut vec_split: Vec<&str> = theme_split.collect();
-
-            vec_split.pop();
-
-            let mut vec_theme_sanitized = vec![];
-            for theme_name in vec_split {
-                let mut theme_name_sanitized = sanitize_theme_name(theme_name);
-                theme_name_sanitized = theme_name_sanitized.replace('_', " ");
-                vec_theme_sanitized.push(theme_name_sanitized);
-            }
-
-            Ok(vec_theme_sanitized)
+            return Err(command_err);
         }
+
+        let theme_split = command_output.split(".conf\n");
+        let mut vec_split: Vec<&str> = theme_split.collect();
+
+        vec_split.pop();
+
+        let mut vec_theme_sanitized = vec![];
+        for theme_name in vec_split {
+            let mut theme_name_sanitized = sanitize_theme_name(theme_name);
+            theme_name_sanitized = theme_name_sanitized.replace('_', " ");
+            vec_theme_sanitized.push(theme_name_sanitized);
+        }
+
+        Ok(vec_theme_sanitized)
     }
 
     fn get_themes_path_from_colorize_file(&self) -> Result<String, String> {
@@ -85,13 +85,12 @@ impl Commands for Kitty {
             let command_failed = !command_err.is_empty();
 
             if command_failed {
-                Err(command_err)
-            } else {
-                Ok(command_output)
+                return Err(command_err);
             }
-        } else {
-            Err("Oops something went wrong".to_string())
+
+            return Ok(command_output);
         }
+        Err("Oops something went wrong".to_string())
     }
 }
 

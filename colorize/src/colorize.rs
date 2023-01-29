@@ -34,6 +34,7 @@ impl App for Colorize {
                         if iter % 4 == 0 {
                             ui.end_row();
                         }
+
                         if button.clicked() {
                             let _message =
                                 kitty_theme_change(Box::new(Kitty {}), String::from(theme));
