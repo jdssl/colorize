@@ -21,9 +21,10 @@
 ## To Run
 
 - Create file `colorize` in `$HOME` directory with the path.
-- Ex:. `/Users/<your-username>/.config/kitty/themes`
+    - Ex:. `/Users/<your-username>/.config/kitty/themes`
+- `cargo run start`
 
 ## Run tests
 
 - Run all tests to kitty module: `make kitty-tests`
- 
+
