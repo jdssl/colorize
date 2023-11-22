@@ -28,3 +28,6 @@
 
 - Run all tests to kitty module: `make kitty-tests`
 
+## Disclaimer
+
+This was my first project made in Rust, I'm not updating it to leave it as history.
