@@ -1,6 +1,6 @@
 [workspace]
-
 members = [
     "colorize",
     "kitty"
 ]
+resolver = "2"
