@@ -2,5 +2,10 @@ mod colorize;
 
 fn main() {
     // GUI
-    colorize::init();
+    match colorize::init() {
+        Ok(()) => {}
+        Err(e) => {
+            eprintln!("Error: {}", e)
+        }
+    }
 }

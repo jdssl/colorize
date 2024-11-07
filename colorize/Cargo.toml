@@ -2,8 +2,7 @@
 name = "colorize"
 version = "0.2.0"
 edition = "2021"
-author = "Jonatan Lima <jotanlima@gmail>"
 
 [dependencies]
-eframe = "0.20.0"
+eframe = "0.29.1"
 kitty = { path = "../kitty" }

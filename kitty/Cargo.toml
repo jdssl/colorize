@@ -2,7 +2,6 @@
 name = "kitty"
 version = "0.2.0"
 edition = "2021"
-author = "Jonatan Lima <jotanlima@gmail>"
 
 [dependencies]
 mockall = "0.11.3"
