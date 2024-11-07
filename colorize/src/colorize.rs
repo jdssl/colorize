@@ -1,6 +1,6 @@
 use eframe::{
-    egui::{Button, CentralPanel, Grid, ScrollArea, Vec2},
-    run_native, App, NativeOptions,
+    egui::{Button, CentralPanel, Grid, ScrollArea},
+    App,
 };
 
 use kitty::{kitty_theme_change, kitty_theme_folder, Kitty};
@@ -46,13 +46,10 @@ impl App for Colorize {
     }
 }
 
-pub fn init() {
+pub fn init() -> eframe::Result {
     let name = "colorize - v0.2.0";
     let app = Box::new(Colorize::new());
-    let win_option = NativeOptions {
-        initial_window_size: Some(Vec2::new(540., 80.)),
-        ..Default::default()
-    };
+    let native_options = eframe::NativeOptions::default();
 
-    run_native(name, win_option, Box::new(|_cc| app));
+    eframe::run_native(name, native_options, Box::new(|_cc| Ok(app)))
 }
