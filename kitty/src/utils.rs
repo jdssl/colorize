@@ -1,6 +1,6 @@
 /// Convert output command to string
 pub fn convert_command_result_to_string(command: &[u8]) -> String {
-    return String::from_utf8_lossy(command).to_string();
+    String::from_utf8_lossy(command).to_string()
 }
 
 /// Return a string with the first letter uppercase
