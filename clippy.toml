@@ -1,0 +1,3 @@
+disallowed-methods = [
+"std::result::Result::unwrap"
+]
